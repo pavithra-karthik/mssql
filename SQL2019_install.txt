@@ -1,0 +1,91 @@
+cd '\\techbuild\sql source\'
+cd .\Brian\UCSD_Build_Scripts\
+cd sqldb
+cd SQL2019
+set-executionpolicy Bypass
+
+& '.\SQLDB - Deploy SQL Server.ps1'
+
+
+
+
+SSIS
+& '.\SQLDB - Deploy SQL Server.ps1'-SQLServiceAccountName "SS-SSDBDDWSIS19$" -AGTServiceAccountName "SA-SSDBDDWSIS19$"      -------- this works no need for BOE\
+
+
+& '.\SQLDB - Deploy SQL Server.ps1'-SQLServiceAccountName "SS-RTRADSWSIS11$" -AGTServiceAccountName "SA-RTRADSWSIS11$"  --- RTRA-DSW-SSIS11
+
+& '.\SQLDB - Deploy SQL Server.ps1'-SQLServiceAccountName "SS-RTRADDWSIS11$" -AGTServiceAccountName "SA-RTRADDWSIS11$"  --- RTRA-DDW-SSIS11
+
+
+SSRS - 192 server
+& '.\SQLDB - Deploy SQL Server.ps1'-SQLServiceAccountName "SS-SSDBDDWRS192$" -AGTServiceAccountName "SA-SSDBDDWRS192$"      -------- this works no need for BOE\
+
+
+SSRS - 191 server
+& '.\SQLDB - Deploy SQL Server.ps1'-SQLServiceAccountName "SS-SSDBDDWRS191$" -AGTServiceAccountName "SA-SSDBDDWRS191$"      -------- this works no need for BOE\
+
+
+& '.\SQLDB - 02 - Install SQL Server Database Services.ps1'
+
+& '.\SQLDB - 03 - Post-install Configuration.ps1'
+
+& '.\SQLDB - 04 - Post-install SQL Scripts.ps1'
+
+
+
+& '.\SQLDB.Test.ps1'
+
+& '.\SQLDB.Test_NoAdminCheck.ps1'
+
+
+needed to check collation
+Latin1_General_CI_AS
+
+***************************
+SSIS install
+
+cd '\\techbuild\sql source\'
+cd .\Brian\UCSD_Build_Scripts\
+cd SSIS
+cd SSIS2019
+set-executionpolicy Bypass
+
+& '.\SSIS - Deploy SSIS.ps1' -$SsisServiceAccount "IS-SSDBDDWSIS19"  -- try this without hardcoded IS- account in 00
+
+& '.\SSIS - Deploy SSIS.ps1' -$SsisServiceAccount "IS-SSDBDDWSIS19$"  -- try this without hardcoded IS- account in 00 added $ at account end
+
+
+################# 17.05.21 ######### did not work as expected. Back to hard coded in script 00
+& '.\SSIS - Deploy SSIS.ps1' -$SsisServiceAccount "IS-RTRAPPWSSIS1$"  
+
+-- try this without hardcoded IS- account in 00 added $ at account end, removed $in front of $SsisServiceAccount
+
+
+###################### this this line 10.05.21
+& '.\SSIS - Deploy SSIS.ps1'
+IS account hardcoded again in script 00
+
+
+
+Detials needed for SSIS install
+
+AppplicationName: RTRA
+Environment : UAT
+Proxyusername: SSIS-RTRA-PREPROD-PX            ###  this case removed the Y from PXY due to 15 char issues.
+ProxyPassword: tE*Rm.XoI9~4sD*yGz>n   -needed from CyberArk already created. Extracted from CA 17.03.21
+Agentinstance: RTRA-PPW-SSIS1A\INST1
+
+RTRA-PPW-SSIS2A\INST1
+IS-RTRAPPWSSIS2$
+
+SSISserviceaccountname : IS-RTRAPPWSSIS1$
+
+
+password created: 
+INFO: Creating Integration Services package catalog [SSISDB]
+INFO: SSISDB password used: b{8^5SJ,e)Vc-3qN
+
+
+
+****** note IS- service account details harded coded into script SSIS - 00
